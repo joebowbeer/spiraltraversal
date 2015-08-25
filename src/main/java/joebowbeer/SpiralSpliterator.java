@@ -8,7 +8,7 @@ import java.util.function.IntConsumer;
  */
 class SpiralSpliterator extends Spliterators.AbstractIntSpliterator {
 
-  enum Move { RIGHT, DOWN, LEFT, UP, DONE }
+  enum Move { RIGHT, DOWN, LEFT, UP, NONE }
 
   private final int[][] matrix;
   private int rowTop;
@@ -25,12 +25,12 @@ class SpiralSpliterator extends Spliterators.AbstractIntSpliterator {
     this.matrix = matrix;
     this.rowBottom = numRows - 1;
     this.colRight = numCols - 1;
-    move = (numRows > 0 && numCols > 0) ? Move.RIGHT : Move.DONE;
+    move = (numRows * numCols > 0) ? Move.RIGHT : Move.NONE;
   }
 
   @Override
   public boolean tryAdvance(IntConsumer action) {
-    if (move == Move.DONE) {
+    if (move == Move.NONE) {
       return false;
     }
     action.accept(matrix[iRow][jCol]);
@@ -43,7 +43,7 @@ class SpiralSpliterator extends Spliterators.AbstractIntSpliterator {
         if (jCol == colRight) {
           iRow++;
           rowTop++;
-          move = (rowTop <= rowBottom) ? Move.DOWN : Move.DONE;
+          move = (rowTop <= rowBottom) ? Move.DOWN : Move.NONE;
         } else {
           jCol++;
         }
@@ -53,7 +53,7 @@ class SpiralSpliterator extends Spliterators.AbstractIntSpliterator {
         if (iRow == rowBottom) {
           jCol--;
           colRight--;
-          move = (colLeft <= colRight) ? Move.LEFT : Move.DONE;
+          move = (colLeft <= colRight) ? Move.LEFT : Move.NONE;
         } else {
           iRow++;
         }
@@ -63,7 +63,7 @@ class SpiralSpliterator extends Spliterators.AbstractIntSpliterator {
         if (jCol == colLeft) {
           iRow--;
           rowBottom--;
-          move = (rowTop <= rowBottom) ? Move.UP : Move.DONE;
+          move = (rowTop <= rowBottom) ? Move.UP : Move.NONE;
         } else {
           jCol--;
         }
@@ -73,7 +73,7 @@ class SpiralSpliterator extends Spliterators.AbstractIntSpliterator {
         if (iRow == rowTop) {
           jCol++;
           colLeft++;
-          move = (colLeft <= colRight) ? Move.RIGHT : Move.DONE;
+          move = (colLeft <= colRight) ? Move.RIGHT : Move.NONE;
         } else {
           iRow--;
         }
